@@ -14,7 +14,7 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'Valloric/YouCompleteMe'
 "Plugin 'danilo-augusto/vim-afterglow'
-Plugin 'flazz/vim-colorschemes' "颜色
+"Plugin 'flazz/vim-colorschemes' "颜色
 Plugin 'scrooloose/nerdtree'    "nerdtree
 Plugin 'majutsushi/tagbar'      "tagbar
 Plugin 'humiaozuzu/TabBar'      "alt1~9
@@ -22,10 +22,10 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'taglist.vim'            "
 Plugin 'scrooloose/nerdcommenter' "code comment
 Plugin 'Lokaltog/vim-powerline' "
-Plugin 'scrooloose/syntastic'" syntastic
+"Plugin 'scrooloose/syntastic'" syntastic
 Plugin 'nathanaelkane/vim-indent-guides'
 Plugin 'kien/ctrlp.vim'
-Plugin 'godlygeek/tabular'
+Plugin 'godlygeek/tabular' "对齐
 Plugin 'plasticboy/vim-markdown'
 "Plugin 'Shougo/vimshell.vim'
 "插件列表结束 

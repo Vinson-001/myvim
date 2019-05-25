@@ -7,7 +7,7 @@ source ~/.vim/bundles.vim
 set helplang=cn 
 
 " 定义快捷键的前缀，即 <Leader>
-let mapleader="\<space>"
+let mapleader=","
 
 " >>
 " 设置主题
@@ -17,7 +17,8 @@ set modelines=0
 set backspace=2 
 
 syntax on "语法高亮
-
+set selection=exclusive
+set clipboard+=unnamed
 "用浅色高亮当前行
 autocmd InsertLeave * se nocul
 autocmd InsertEnter * se cul
@@ -60,6 +61,8 @@ set scrolloff=3 "光标移动到buffer的顶部和底部时保持3行的距离
 set showmatch "高亮显示对应的括号
 set matchtime=5 "对应括号高亮时间(单位是十分之一秒)
 
+"set listchars=tab:\|\ ,trail:.,extends:>,precedes:<,eol:$
+"nmap st: set list<cr>
 set whichwrap=b,s,<,>,[,] "开启normal 或visual模式下的backspace键空格键，左右方向键,insert或replace模式下的左方向键，右方向键的跳行功能
 " <<
 
@@ -98,8 +101,6 @@ nmap LE $
 "nmap <Leader>p "+p
 
 " 定义快捷键关闭当前分割窗口
-nmap <Leader>q :q<CR>
-" 定义快捷键保存当前窗口内容
 nmap <Leader>w :w<CR>
 " 定义快捷键保存所有窗口内容并退出 vim
 nmap <Leader>WQ :wa<CR>:q<CR>
@@ -120,6 +121,8 @@ nnoremap <Leader>kw <C-W>k
 " 跳转至下方的子窗口
 nnoremap <Leader>jw <C-W>j
 
+nmap bn :bNext<cr>
+nmap bp :bprevious<cr>
 " 定义快捷键在结对符之间跳转
 nmap <Leader>M %
 
@@ -134,7 +137,29 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 " 开启实时搜索功能
 "set incsearch
 
+map <space> /
+map <c-space> ?
+"map <leader>bd:Bclose
 
+command! Bclose call <SID>BufcloseCloseIt()
+function! <SID>BufcloseCloseIt()
+    let l:currentBufNum = bufnr("%")
+    let l:alternateBufNum = bufnr("#")
+
+    if buflisted(l:alternateBufNum)
+        buffer #
+    else
+        bnext
+    endif
+
+    if bufnr("%") == l:currentBufNum
+        new
+    endif
+
+    if buflisted(l:currentBufNum)
+        execute("bdelete! ".l:currentBufNum)
+    endif
+endfunction
 " vim 自身命令行模式智能补全
 set wildmenu
 
@@ -155,15 +180,16 @@ let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 "注释和字符串中的文字也会被收入补全
 let g:ycm_collect_identifiers_from_comments_and_strings = 0
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-
-nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/ycm/cpp/.ycm_extra_conf.py'
+" 禁用syntastic来对python检查
+let g:syntastic_ignore_files=[".*\.py$","*.o"]
+" 使用ctags生成的tags文件
+let g:ycm_collect_identifiers_from_tag_files = 1
 nnoremap <leader>lo :lopen<CR> "open locationlist                                                                                                                      
 nnoremap <leader>lc :lclose<CR>   "close locationlist
-inoremap <leader><leader> <C-x><C-o>"
-inoremap <leader><leader> <C-x><C-o>
-"nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>jd :YcmCompleter GoToDefinitionElseDeclaration<CR>
 autocmd Filetype python,c,cpp,Java,vim nnoremap <leader>gd :YcmCompleter GoToDefinitionElseDeclaration<CR> " 跳转到定义处
+map <F9> :YcmDiags<cr>
 " <<<
 "
 " >>> config nerdtree
@@ -231,19 +257,23 @@ let g:NERDTrimTrailingWhitespace = 1
 " Enable NERDCommenterToggle to check all selected lines is commented or not 
 let g:NERDToggleCheckAllLines = 1
 
-nmap <leader>cc NERDComComment "注释
-nmap <leader>cu NERDComUncommentLine "取消注释
-nmap<leader>cs NERDComSexyComment "注释代码块
+map <leader>cc NERDComComment "注释
+map <leader>cu NERDComUncommentLine "取消注释
+map<leader>cm NERDComSexyComment "注释代码块
+
+map <F6> <leader>cm
+map <F7> <leader>cu
+map <c-z> u
 " <<<
 " >>> condig syntax
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
 "<<<
 "let g:Powerline_symbols = 'fancy'
 ">>>
@@ -258,7 +288,7 @@ let g:vim_markdown_math = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_toml_frontmatter = 1
 let g:vim_markdown_json_frontmatter = 1
-" <<< 
+" <<<
 "nmap <F1> :IndentGuidesToggle<cr>
 " vim-afterglow 
 "let g:airline_theme='afterglow'
