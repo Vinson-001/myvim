@@ -1,6 +1,7 @@
 
 
-###支持的插件及功能
+### 支持的插件及功能
+
 - [YouCompleteMe](https://github.com/Valloric/YouCompleteMe):码补全提示
 - [nerdtree](https://github.com/scrooloose/nerdtree):用于导航文件系统的树资源管理器插件
 - [tagbar](https://github.com/majutsushi/tagbar):功能类似taglist
