@@ -139,27 +139,7 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
 map <space> /
 map <c-space> ?
-"map <leader>bd:Bclose
 
-command! Bclose call <SID>BufcloseCloseIt()
-function! <SID>BufcloseCloseIt()
-    let l:currentBufNum = bufnr("%")
-    let l:alternateBufNum = bufnr("#")
-
-    if buflisted(l:alternateBufNum)
-        buffer #
-    else
-        bnext
-    endif
-
-    if bufnr("%") == l:currentBufNum
-        new
-    endif
-
-    if buflisted(l:currentBufNum)
-        execute("bdelete! ".l:currentBufNum)
-    endif
-endfunction
 " vim 自身命令行模式智能补全
 set wildmenu
 
@@ -203,8 +183,8 @@ let NERDTreeQuitOnOpen=1 "打开文件时关闭树
 let NERDTreeShowBookmarks=1 "显示书签
 map ne :NERDTreeToggle<CR>
 "map <leader>tl :TlistToggle<cr>
-"nnoremap <leader>ma :set mouse=a<cr>
-"nnoremap <leader>mu :set mouse=<cr>
+nnoremap <leader>ma :set mouse=a<cr>
+nnoremap <leader>mu :set mouse=<cr>
 " <<<
 
 " >>> config tagbar
@@ -257,9 +237,9 @@ let g:NERDTrimTrailingWhitespace = 1
 " Enable NERDCommenterToggle to check all selected lines is commented or not 
 let g:NERDToggleCheckAllLines = 1
 
-map <leader>cc NERDComComment "注释
-map <leader>cu NERDComUncommentLine "取消注释
-map<leader>cm NERDComSexyComment "注释代码块
+"map <leader>cc NERDComComment "注释
+"map <leader>cu NERDComUncommentLine "取消注释
+"map<leader>cm NERDComSexyComment "注释代码块
 
 map <F6> <leader>cm
 map <F7> <leader>cu
@@ -305,3 +285,75 @@ autocmd BufReadPost *
       \     endif |
       \ endif
 "<<<
+
+" >>> ctags
+let Tlist_Ctags_Cmd='/usr/local/ctags-5.8/bin/ctags'
+set tags=tags;
+" <<<
+" >>> cscope
+set csprg=/usr/local/cscope-15.7a/src/cscope
+set csto=0
+set cst
+set csverb
+set cscopetag
+set cspc=3
+set cscopequickfix=s-,c-,d-,i-,t-,e-
+
+
+if has("cscope")
+	set csprg=/usr/local/cscope-15.7a/src/cscope
+	set csto=0
+	set cst
+	set nocsverb
+	" add any database in current directory
+	if filereadable("cscope.out")
+		cs add cscope.out
+		" else add database pointed to by environment
+	elseif $CSCOPE_DB != ""
+		cs add $CSCOPE_DB
+	endif
+	set csverb
+endif
+
+
+if has("cscope")  
+	set csprg=/usr/local/cscope-15.7a/src/cscope
+	set csto=0 
+	set cst  
+	set csverb  
+	set cspc=3 
+	"add any database in current dir  
+	if filereadable("cscope.out")  
+		"cs add cscope.out  
+		"else search cscope.out elsewhere  
+	else 
+		let cscope_file=findfile("cscope.out",".;")  
+		let cscope_pre=matchstr(cscope_file,".*/")  
+		if !empty(cscope_file) && filereadable(cscope_file)  
+"			exe "cs add" cscope_file cscope_pre 
+		endif        
+	endif  
+endif
+
+map <F12> :call AddCscope()<CR>
+func! AddCscope()
+	let cscope_file=findfile("cscope.out",".;")  
+		let cscope_pre=matchstr(cscope_file,".*/")  
+		if !empty(cscope_file) && filereadable(cscope_file)  
+			exe "cs add" cscope_file cscope_pre 
+		endif        
+endfunc
+
+
+nmap <F3> :cs find g <C-R>=expand("<cword>")<CR><CR>
+"find called
+nmap <F4> :cs find c <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-a>s :cs find s <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-a>g :cs find g <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-a>c :cs find c <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-a>t :cs find t <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-a>e :cs find e <C-R>=expand("<cword>")<CR><CR>
+"nmap <C-a>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
+"nmap <C-a>i :cs find i <C-R>=expand("<cfile>")<CR><CR>
+"nmap <C-a>d :cs find d <C-R>=expand("<cword>")<CR><CR>
+
